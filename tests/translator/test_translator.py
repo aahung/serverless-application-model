@@ -299,6 +299,7 @@ class TestTranslatorEndToEnd(TestCase):
                 "state_machine_with_api_resource_policy",
                 "state_machine_with_api_auth_default_scopes",
                 "state_machine_with_condition_and_events",
+                "state_machine_with_xray",
                 "function_with_file_system_config",
             ],
             [
@@ -338,7 +339,7 @@ class TestTranslatorEndToEnd(TestCase):
 
             output_fragment = transform(manifest, parameter_values, mock_policy_loader)
 
-        print (json.dumps(output_fragment, indent=2))
+        print(json.dumps(output_fragment, indent=2))
 
         # Only update the deployment Logical Id hash in Py3.
         if sys.version_info.major >= 3:
@@ -379,6 +380,8 @@ class TestTranslatorEndToEnd(TestCase):
                 "http_api_def_uri",
                 "explicit_http_api",
                 "http_api_with_cors",
+                "http_api_lambda_auth",
+                "http_api_lambda_auth_full",
             ],
             [
                 ("aws", "ap-southeast-1"),
@@ -418,7 +421,7 @@ class TestTranslatorEndToEnd(TestCase):
 
             output_fragment = transform(manifest, parameter_values, mock_policy_loader)
 
-        print (json.dumps(output_fragment, indent=2))
+        print(json.dumps(output_fragment, indent=2))
 
         # Only update the deployment Logical Id hash in Py3.
         if sys.version_info.major >= 3:
@@ -477,7 +480,7 @@ class TestTranslatorEndToEnd(TestCase):
             }
 
             output_fragment = transform(manifest, parameter_values, mock_policy_loader)
-        print (json.dumps(output_fragment, indent=2))
+        print(json.dumps(output_fragment, indent=2))
 
         # Only update the deployment Logical Id hash in Py3.
         if sys.version_info.major >= 3:
@@ -651,6 +654,12 @@ class TestTranslatorEndToEnd(TestCase):
         "error_function_with_api_key_false",
         "error_api_with_usage_plan_invalid_parameter",
         "error_http_api_with_cors_def_uri",
+        "error_http_api_invalid_lambda_auth",
+        "error_api_mtls_configuration_invalid_field",
+        "error_api_mtls_configuration_invalid_type",
+        "error_httpapi_mtls_configuration_invalid_field",
+        "error_httpapi_mtls_configuration_invalid_type",
+        "error_resource_policy_not_dict",
     ],
 )
 @patch("boto3.session.Session.region_name", "ap-southeast-1")
@@ -751,7 +760,7 @@ def test_swagger_body_sha_gets_recomputed():
 
     output_fragment = transform(document, parameter_values, mock_policy_loader)
 
-    print (json.dumps(output_fragment, indent=2))
+    print(json.dumps(output_fragment, indent=2))
     deployment_key = get_deployment_key(output_fragment)
     assert deployment_key
 
@@ -787,7 +796,7 @@ def test_swagger_definitionuri_sha_gets_recomputed():
 
     output_fragment = transform(document, parameter_values, mock_policy_loader)
 
-    print (json.dumps(output_fragment, indent=2))
+    print(json.dumps(output_fragment, indent=2))
     deployment_key = get_deployment_key(output_fragment)
     assert deployment_key
 
@@ -869,7 +878,7 @@ class TestFunctionVersionWithParameterReferences(TestCase):
         mock_policy_loader = get_policy_mock()
         output_fragment = transform(document, parameter_values, mock_policy_loader)
 
-        print (json.dumps(output_fragment, indent=2))
+        print(json.dumps(output_fragment, indent=2))
 
         return output_fragment
 
